@@ -5,6 +5,8 @@ cache:
   directories:
     - "node_modules"
 
+
+
 # The tests are broken, so we skip it for now
 # Needed for Firefox
 # before_script:
