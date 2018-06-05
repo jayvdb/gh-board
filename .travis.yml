@@ -1,9 +1,23 @@
 # `sudo:false` for faster builds.
 sudo: false
 language: node_js
+node_js:
+  - 8
 cache:
   directories:
     - "node_modules"
+
+jobs:
+  include:
+    - stage: moban
+      language: python
+      python: 3.6
+      cache: pip
+      before_install: false
+      install: pip install moban
+      before_script: false
+      script: .ci/check_moban.sh
+      after_success: false
 
 # Needed for Firefox
 before_script:
