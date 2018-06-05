@@ -5,6 +5,18 @@ cache:
   directories:
     - "node_modules"
 
+jobs:
+  include:
+    - python: 3.6
+      stage: moban
+      env: false
+      cache: pip
+      before_install: false
+      install: pip install moban
+      before_script: false
+      script: .ci/check_moban.sh
+      after_success: false
+
 # Needed for Firefox
 before_script:
   - export DISPLAY=:99.0
