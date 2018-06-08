@@ -3,6 +3,10 @@ cache:
   directories:
     - "node_modules"
 
+stages:
+  - test
+  - moban
+
 jobs:
   include:
     - python: 3.6
