@@ -1,5 +1,3 @@
-# `sudo:false` for faster builds.
-sudo: false
 language: node_js
 cache:
   directories:
@@ -31,14 +29,3 @@ notifications:
   email: false
   webhooks: https://www.travisbuddy.com/
   on_success: never
-
-# Remove /dist/ from .gitignore
-before_deploy:
-  - sed -i '/\/dist\//d' ./.gitignore
-
-deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
-  on:
-    branch: master
