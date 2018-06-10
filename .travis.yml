@@ -29,6 +29,9 @@ script:
   - npm run test
   - script/build.sh
 
+after_success:
+  - codecov
+
 notifications:
   email: false
   webhooks: https://www.travisbuddy.com/
