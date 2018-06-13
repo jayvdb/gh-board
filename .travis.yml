@@ -7,6 +7,7 @@ node_js:  # must have multiple entries otherwise it is ignored
 
 cache:
   directories:
+    - $XDG_CACHE_HOME/pip
     - $XDG_CACHE_HOME/npm
     - $XDG_CACHE_HOME/node_modules
 
@@ -21,6 +22,11 @@ cache:
   after_success: false
   before_deploy: false
   deploy: false
+
+stages:
+  - lint
+  - test
+  - moban
 
 env:
   global:
@@ -44,6 +50,16 @@ jobs:
       cache: pip
       install: pip install moban
       script: .ci/check_moban.sh
+
+    - <<: *disable_global
+      stage: lint
+      language: python
+      python: 3.6
+      install:
+        - pip install coala-bears
+        - npm install
+      after_script: rm node_modules
+      script: coala --non-interactive -V
 
 before_install:
   - ln -s $NODE_PATH .

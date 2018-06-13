@@ -1,0 +1,109 @@
+[all]
+language = javascript
+
+max_line_length = 80
+use_spaces = True
+
+ignore = .git/**,
+  dist/**,
+  tmp/**,
+  vendor/**,
+  node_modules/**,
+  bower_components/**
+
+[all.whitespace]
+files = **
+bears = SpaceConsistencyBear
+
+ignore = .git/**,
+  dist/**,
+  tmp/**,
+  vendor/**,
+  node_modules/**,
+  bower_components/**,
+  src/gantt-chart.js
+
+[all.quotes]
+files = **
+bears = QuotesBear
+
+preferred_quotation = '
+
+default_actions = QuotesBear: ApplyPatchAction
+
+# " and ' are not interchangable for shell scripts
+ignore = .git/**,
+  dist/**,
+  tmp/**,
+  vendor/**,
+  node_modules/**,
+  bower_components/**,
+  package.json,
+  package-lock.json,
+  **.jsx,
+  .eslintrc,
+  **.sh,
+  **.md,
+  **.html,
+  **.less,
+  Dockerfile,
+  LICENSE,
+  .gitignore,
+  .coafile
+
+[all.yaml]
+files = **.yml, **.yaml
+bears = YAMLLintBear
+
+[all.shell]
+files = **.sh
+bears = ShellCheckBear
+shell = bash
+
+[all.markdown]
+files = **.md
+bears = MarkdownBear
+bullets = -
+
+[all.json]
+files = **.json
+bears = JSONFormatBear
+indent_size = 2
+
+[all.html]
+files = **.html
+bears = HTMLLintBear
+htmllint_ignore = optional
+
+[all.js]
+files = **.js
+bears = ESLintBear
+eslint_config = .eslintrc
+
+# See https://github.com/coala/coala-bears/issues/2533
+ignore = .git/**,
+  dist/**,
+  tmp/**,
+  vendor/**,
+  node_modules/**,
+  bower_components/**,
+  .eslintrc,
+  src/gantt-chart.js
+
+
+# Sometimes fixers (e.g. autopep8) makes too long lines, need to check after!
+[all.linelength]
+bears = LineLengthBear
+ignore_length_regex = ^.*https?://
+
+[all.links]
+bears = InvalidLinkBear
+
+
+[all.commit]
+bears = GitCommitBear
+shortlog_trailing_period = False
+shortlog_regex = ([^:]*|[^:]+: [A-Z0-9*].*)
+body_close_issue = True
+body_close_issue_full_url = True
+body_close_issue_on_last_line = True
