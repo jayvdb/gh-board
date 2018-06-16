@@ -1,11 +1,11 @@
 [all]
 ignore = node_modules/**, dist/**, .git/**
+use_spaces = true
+ignore += src/gantt-chart.js
 
 [all.SpaceConsistencyBear]
 files = **.js, **.json, **.yml, **.yaml, **.md
 bears = SpaceConsistencyBear
-use_spaces = true
-ignore += src/gantt-chart.js
 
 [all.json]
 bears = JSONFormatBear
@@ -14,9 +14,8 @@ indent_size = 2
 
 [all.js]
 bears = ESLintBear
-eslint_config = .eslintrc.json
+eslint_config = .eslintrc
 files = **.js
-ignore += src/gantt-chart.js
 
 [all.markdown]
 bears = MarkdownBear
