@@ -61,7 +61,7 @@ function getIssueDueAt(div) {
         }
       }
     } else {
-      console.error(`Invalid due date format for "${el.outerHTML}"`);
+      console.error(`Invalid due date format for '${el.outerHTML}'`);
     }
   }
   return null;
