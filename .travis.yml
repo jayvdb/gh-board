@@ -7,8 +7,12 @@ node_js:  # must have multiple entries otherwise it is ignored
 
 cache:
   directories:
+<<<<<<< HEAD
     - $XDG_CACHE_HOME/npm
     - $XDG_CACHE_HOME/node_modules
+=======
+    - 'node_modules'
+>>>>>>> .travis.yml: Fix yaml style
 
 env:
   global:
@@ -43,7 +47,7 @@ before_install:
 # Needed for Firefox
 before_script:
   - sh -e /etc/init.d/xvfb start
-  - sleep 3 # give xvfb some time to start
+  - sleep 3  # give xvfb some time to start
 
 script:
   - script/build.sh
@@ -67,5 +71,5 @@ deploy:
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
   keep-history: true
-  on:
+  'on':
     branch: master
