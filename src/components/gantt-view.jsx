@@ -116,30 +116,30 @@ class GanttChart extends Component {
       let format;
       switch (timeDomainString) {
       case '1hr':
-        	format = '%H:%M:%S';
-        	chart.timeDomain([ d3.time.hour.offset(maxDate, -1), maxDate ]);
-        	break;
+         format = '%H:%M:%S';
+         chart.timeDomain([ d3.time.hour.offset(maxDate, -1), maxDate ]);
+         break;
       case '3hr':
-        	format = '%H:%M';
-        	chart.timeDomain([ d3.time.hour.offset(maxDate, -3), maxDate ]);
-        	break;
+         format = '%H:%M';
+         chart.timeDomain([ d3.time.hour.offset(maxDate, -3), maxDate ]);
+         break;
 
       case '6hr':
-        	format = '%H:%M';
-        	chart.timeDomain([ d3.time.hour.offset(maxDate, -6), maxDate ]);
-        	break;
+         format = '%H:%M';
+         chart.timeDomain([ d3.time.hour.offset(maxDate, -6), maxDate ]);
+         break;
 
       case '1day':
-        	format = '%H:%M';
-        	chart.timeDomain([ d3.time.day.offset(maxDate, -1), maxDate ]);
-        	break;
+         format = '%H:%M';
+         chart.timeDomain([ d3.time.day.offset(maxDate, -1), maxDate ]);
+         break;
 
       case '1week':
-        	format = '%m/%d';
-        	chart.timeDomain([ d3.time.day.offset(maxDate, -7), maxDate ]);
-        	break;
+         format = '%m/%d';
+         chart.timeDomain([ d3.time.day.offset(maxDate, -7), maxDate ]);
+         break;
       default:
-        	format = '%H:%M';
+         format = '%H:%M';
 
       }
       chart.tickFormat(format);
