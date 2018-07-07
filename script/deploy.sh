@@ -9,7 +9,7 @@ fi
 
 # check if the current branch is `gh-pages`
 currentBranch=$(git rev-parse --abbrev-ref HEAD)
-if [[ ${currentBranch} == "gh-pages" ]]
+if [ "${currentBranch}" = "gh-pages" ]
 then
   git push origin gh-pages
 else
@@ -31,7 +31,7 @@ else
   git push -f origin gh-pages
 
   # go back to previous branch
-  git checkout ${currentBranch}
+  git checkout "${currentBranch}"
 
   # reset .gitignore
   git checkout -- .gitignore
