@@ -15,6 +15,7 @@ env:
     - XDG_CONFIG_HOME=$HOME/.config
     - XDG_DATA_HOME=$HOME/.local/share
     - XDG_CACHE_HOME=$HOME/.cache
+    - XDG_RUNTIME_DIR=/tmp
     - NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/config
     - NPM_CONFIG_CACHE=$XDG_CACHE_HOME/npm
     - NPM_CONFIG_TMP=$XDG_RUNTIME_DIR/npm
@@ -35,7 +36,8 @@ jobs:
       deploy: false
 
 before_install:
-  - mv node_modules $NODE_PATH
+  # mv node_modules $NODE_PATH
+  mkdir $XDG_CACHE_HOME/npm
 
 # Needed for Firefox
 before_script:
