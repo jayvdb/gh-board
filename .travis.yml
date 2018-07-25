@@ -36,9 +36,13 @@ jobs:
       after_success: false
       deploy: false
 
-# Needed for Firefox
+before_install:
+  - ln -s $NODE_PATH .
+
 before_script:
-  - mv node_modules $NODE_PATH
+  # Remove the symlink
+  - rm node_modules
+  # Needed for Firefox
   - sh -e /etc/init.d/xvfb start
   - sleep 3 # give xvfb some time to start
 
