@@ -1,10 +1,12 @@
 # `sudo:false` for faster builds.
 sudo: false
 language: node_js
+node_js:
+  - 8
+
 cache:
   directories:
     - $NODE_PATH
-
 # env forces jobs to be created from the top level settings
 env:
   global:
@@ -16,7 +18,7 @@ env:
     - NPM_CONFIG_CACHE=$XDG_CACHE_HOME/npm
     - NPM_CONFIG_TMP=$XDG_RUNTIME_DIR/npm
     - NODE_PATH=$XDG_CACHE_HOME/node_modules
-  matrix: true
+
 jobs:
   include:
     - stage: moban
