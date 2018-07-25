@@ -12,9 +12,9 @@ cache:
 env:
   global:
     - DISPLAY=:99.0
-    # XDG_CONFIG_HOME=$HOME/.config
-    # XDG_DATA_HOME=$HOME/.local/share
-    # XDG_CACHE_HOME=$HOME/.cache
+    - XDG_CONFIG_HOME=$HOME/.config
+    - XDG_DATA_HOME=$HOME/.local/share
+    - XDG_CACHE_HOME=$HOME/.cache
     - NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/config
     - NPM_CONFIG_CACHE=$XDG_CACHE_HOME/npm
     - NPM_CONFIG_TMP=$XDG_RUNTIME_DIR/npm
@@ -25,6 +25,7 @@ jobs:
     - stage: moban
       language: python
       python: 3.6
+      node_js: false
       cache: pip
       before_install: false
       install: pip install moban
