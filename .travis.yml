@@ -3,10 +3,19 @@ sudo: false
 language: node_js
 cache:
   directories:
-    - "node_modules"
+    - $NODE_PATH
 
 # env forces jobs to be created from the top level settings
 env:
+  global:
+    - DISPLAY=:99.0
+    # XDG_CONFIG_HOME=$HOME/.config
+    # XDG_DATA_HOME=$HOME/.local/share
+    # XDG_CACHE_HOME=$HOME/.cache
+    - NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/config
+    - NPM_CONFIG_CACHE=$XDG_CACHE_HOME/npm
+    - NPM_CONFIG_TMP=$XDG_RUNTIME_DIR/npm
+    - NODE_PATH=$XDG_CACHE_HOME/node_modules
 jobs:
   include:
     - stage: moban
@@ -22,7 +31,7 @@ jobs:
 
 # Needed for Firefox
 before_script:
-  - export DISPLAY=:99.0
+  - mv node_modules $NODE_PATH
   - sh -e /etc/init.d/xvfb start
   - sleep 3 # give xvfb some time to start
 
