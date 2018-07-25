@@ -16,6 +16,7 @@ env:
     - NPM_CONFIG_CACHE=$XDG_CACHE_HOME/npm
     - NPM_CONFIG_TMP=$XDG_RUNTIME_DIR/npm
     - NODE_PATH=$XDG_CACHE_HOME/node_modules
+env:
 jobs:
   include:
     - stage: moban
