@@ -7,7 +7,8 @@ node_js:
 
 cache:
   directories:
-    - $NODE_PATH
+    - $XDG_CACHE_HOME/npm
+    - $XDG_CACHE_HOME/node_modules
 # env forces jobs to be created from the top level settings
 env:
   global:
@@ -39,16 +40,18 @@ jobs:
 before_install:
   - ln -s $NODE_PATH .
 
+# Needed for Firefox
 before_script:
-  # Remove the symlink
-  - rm node_modules
-  # Needed for Firefox
   - sh -e /etc/init.d/xvfb start
   - sleep 3 # give xvfb some time to start
 
 script:
   - script/build.sh
   - npm run test
+
+after_script:
+  # Remove the symlink after node is finished
+  - rm node_modules
 
 notifications:
   email: false
