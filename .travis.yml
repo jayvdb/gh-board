@@ -34,9 +34,11 @@ jobs:
       after_success: false
       deploy: false
 
+before_install:
+  - mv node_modules $NODE_PATH
+
 # Needed for Firefox
 before_script:
-  - mv node_modules $NODE_PATH
   - sh -e /etc/init.d/xvfb start
   - sleep 3 # give xvfb some time to start
 
