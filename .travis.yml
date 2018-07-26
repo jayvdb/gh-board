@@ -26,6 +26,9 @@ before_script:
   - sh -e /etc/init.d/xvfb start
   - sleep 3 # give xvfb some time to start
 
+before_install:
+  - npm install -g "npm@$(jq -r .dependencies.npm package.json)"
+
 install:
   - npm install --no-optional
 
