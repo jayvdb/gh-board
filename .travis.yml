@@ -20,6 +20,9 @@ jobs:
       after_success: false
       deploy: false
 
+install:
+  - npm install --no-optional
+
 # Needed for Firefox
 before_script:
   - export DISPLAY=:99.0
