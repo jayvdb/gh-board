@@ -39,6 +39,12 @@ jobs:
 
 before_install:
   - ln -s $NODE_PATH .
+  - mkdir -p $XDG_CACHE_HOME/node_modules/
+  - cp package.json $XDG_CACHE_HOME
+
+install:
+  - (cd $XDG_CACHE_HOME && npm install)
+  - npm ls
 
 # Needed for Firefox
 before_script:
