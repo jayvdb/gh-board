@@ -27,10 +27,8 @@ before_script:
   - sleep 3 # give xvfb some time to start
 
 before_install:
-  - npm install -g "npm@$(jq -r .dependencies.npm package.json)"
-
-install:
-  - npm install --no-optional
+  - npm set optional false
+  - npm set save false
 
 script:
   - script/build.sh
