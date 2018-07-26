@@ -57,12 +57,8 @@ jobs:
       python: 3.6
       install:
         - pip install coala-bears
-        - npm install
-      after_script: rm node_modules
+        - npm install --prefix=$XDG_CACHE_HOME .
       script: coala --non-interactive -V
-
-before_install:
-  - ln -s $NODE_PATH .
 
 # Needed for Firefox
 before_script:
