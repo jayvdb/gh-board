@@ -26,6 +26,12 @@ before_script:
   - sh -e /etc/init.d/xvfb start
   - sleep 3 # give xvfb some time to start
 
+before_install:
+  - npm install --no-save --dev npm@5.8.0
+
+install:
+  - npm install --no-save --no-optional
+
 script:
   - script/build.sh
   - npm run test
