@@ -43,7 +43,7 @@ before_install:
   - cp package.json $XDG_CACHE_HOME
 
 install:
-  - (cd $XDG_CACHE_HOME && npm install)
+  - (cd $XDG_CACHE_HOME && npm install --no-optional)
   - npm ls
 
 # Needed for Firefox
