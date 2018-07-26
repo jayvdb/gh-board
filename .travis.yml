@@ -58,8 +58,8 @@ jobs:
       install:
         - pip install coala-bears
         - mkdir -p $XDG_CACHE_HOME/node_modules/
-        - ln -s $XDG_CACHE_HOME/node_modules/ .
-        - npm install --prefix=$XDG_CACHE_HOME .
+        - cp package.json $XDG_CACHE_HOME
+        - (cd $XDG_CACHE_HOME && npm install)
       script: coala --non-interactive -V
 
 # Needed for Firefox
