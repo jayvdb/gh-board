@@ -78,6 +78,7 @@
     "mermaid": "^7.0.0",
     "moment": "2.18.1",
     "netlify-env": "0.0.4",
+    "npm": "^5.8.0",
     "octicons": "^6.0.0",
     "octokat": "^0.7.0",
     "prop-types": "^15.6.1",
