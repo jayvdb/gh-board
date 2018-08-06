@@ -1,11 +1,10 @@
-import React from 'react';
+import {Component} from 'react';
 import Client from '../github-client';
 import * as BS from 'react-bootstrap';
 import {LinkExternalIcon} from 'react-octicons';
 
-export default React.createClass({
-  displayName: 'Login',
-  onSave() {
+class Login extends Component {
+  onSave = () => {
     let rootURLVal = this._rootURL.value;
     if (rootURLVal) {
       rootURLVal = rootURLVal.trim();
@@ -21,16 +20,19 @@ export default React.createClass({
     Client.setToken(tokenVal);
     // Close the modal
     this.onCancel();
-  },
-  onClear() {
+  };
+
+  onClear = () => {
     Client.setRootUrl(null);
     Client.setToken(null);
     // Re-render the modal
     this.setState({});
-  },
-  onCancel() {
+  };
+
+  onCancel = () => {
     this.props.onHide();
-  },
+  };
+
   render() {
     const {token, rootURL} = Client.getCredentials();
 
@@ -39,6 +41,7 @@ export default React.createClass({
       let hostname = document.location.hostname;
       let tld = hostname.split('.').slice(-2).join('.');
       if (tld == 'github.io') return null;
+      if (tld == 'netlify.com') return null;
       if (tld == 'localhost') return null;
       return 'https://' + hostname + '/api/v3';
 
@@ -100,4 +103,6 @@ export default React.createClass({
     </BS.Modal>
     );
   }
-});
+}
+
+export default Login;

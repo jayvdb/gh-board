@@ -1,4 +1,4 @@
-import React from 'react';
+import {Component} from 'react';
 import { DropTarget } from 'react-dnd';
 import * as BS from 'react-bootstrap';
 import {DesktopDownloadIcon, PlusIcon} from 'react-octicons';
@@ -42,21 +42,22 @@ function toCSVString(table) {
 }
 
 
-const IssueList = React.createClass({
-  displayName: 'IssueList',
-  getInitialState() {
-    return {morePressedCount: 0, showCSVModal: false};
-  },
-  showAllIssues() {
+class IssueList extends Component {
+  state = {morePressedCount: 0, showCSVModal: false};
+
+  showAllIssues = () => {
     this.setState({showAllIssues: true});
-  },
-  onClickMore() {
+  };
+
+  onClickMore = () => {
     this.setState({morePressedCount: this.state.morePressedCount + 1});
-  },
-  toggleCSVModal() {
+  };
+
+  toggleCSVModal = () => {
     const {showCSVModal} = this.state;
     this.setState({showCSVModal: !showCSVModal});
-  },
+  };
+
   render() {
     const {icon, title, backgroundColor, children, cards, primaryRepo, label} = this.props;
     const {connectDropTarget} = this.props;
@@ -172,7 +173,7 @@ const IssueList = React.createClass({
     );
 
   }
-});
+}
 
 // Export the wrapped version
 export default DropTarget(ItemTypes.CARD, cardListTarget, collect)(IssueList);

@@ -1,0 +1,13 @@
+overrides: coala.yaml
+
+language: node
+
+configuration:
+  template_dir:
+    - .moban.dt/
+    - ../coala-mobans/templates/
+    - ../coala-mobans/assets/
+  configuration: .moban.yaml
+  configuration_dir: ../coala-mobans/
+targets:
+  - .gitignore: gh-board-gitignore.jj2

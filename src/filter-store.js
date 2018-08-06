@@ -1,6 +1,7 @@
 import _ from 'underscore';
 import {EventEmitter} from 'events';
 
+import {getFilters, filterReviewsByFilter} from './route-utils';
 import SettingsStore from './settings-store';
 // import {filterCards} from './issue-store';
 
@@ -169,6 +170,18 @@ class Store extends EventEmitter {
       sortedCards = filterReferencedCards(sortedCards, isFilteringPullRequests);
     }
     return sortedCards;
+  }
+
+  filterAndSortReviews(reviews, login) {
+    const filter = getFilters();
+    const filteredReviews = filterReviewsByFilter(reviews, filter, login);
+    const sortedReviews = filteredReviews.map(review => {
+      review.parsedUpdatedAt = Date.parse(review.updatedAt);
+      return review;
+    }).sort((a, b) => {
+      return b.parsedUpdatedAt - a.parsedUpdatedAt;
+    });
+    return sortedReviews;
   }
 }
 

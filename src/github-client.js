@@ -20,6 +20,8 @@ import FetchAllPlugin from 'octokat/dist/node/plugins/fetch-all';
 import PaginationPlugin from 'octokat/dist/node/plugins/pagination';
 import toQueryString from 'octokat/dist/node/helpers/querystring';
 
+import GraphQLClient from './github-graphql';
+
 const MAX_CACHED_URLS = 2000;
 
 let cachedClient = null;
@@ -167,6 +169,7 @@ class Client extends EventEmitter {
   constructor() {
     super();
     this.LOW_RATE_LIMIT = 60;
+    this.setMaxListeners(20);
   }
   // Used for checking if we should retreive ALL Issues or just open ones
   canCacheLots() { return this.hasCredentials() /*&& !!cacheHandler._db*/; }
@@ -191,6 +194,17 @@ class Client extends EventEmitter {
     let {token, password} = this.getCredentials();
     return !!token || !!password;
   }
+  useGraphQL() {
+    // use GraphQL when applicable, provided `hasCredentials()` is true
+    // developers need to change the behaviour here in case they
+    // want to switch back to use GitHub REST API (Octocat uses REST API)
+    if (this.hasCredentials()) {
+      // GitHub GraphQL API (API V4) requires token
+      return true;
+    } else {
+      return false;
+    }
+  }
   getOcto() {
     if (!cachedClient) {
       let credentials = this.getCredentials();
@@ -202,6 +216,15 @@ class Client extends EventEmitter {
       });
     }
     return cachedClient;
+  }
+  getGraphQLClient() {
+    // GitHub GraphQL API requires token
+    const { token, emitter } = this.getCredentials();
+    // it is a must to return a new instance as there is no concurrency support
+    // see github-graphql.js for more details
+    const ignoreAuthor = 'gitmate-bot rultor TravisBuddy';
+    const ignoreContent = '@gitmate-bot @rultor ^(unack|ack)';
+    return new GraphQLClient(token, ignoreAuthor, ignoreContent, emitter);
   }
   getAnonymousOcto() {
     return new Octo();

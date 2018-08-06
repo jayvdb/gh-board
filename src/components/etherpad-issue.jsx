@@ -1,4 +1,4 @@
-import React from 'react';
+import createReactClass from 'create-react-class';
 
 import Client from '../github-client';
 import IssueStore from '../issue-store';
@@ -6,7 +6,7 @@ import IssueStore from '../issue-store';
 import Etherpad from './etherpad';
 
 
-const EtherpadIssueShell = React.createClass({
+const EtherpadIssueShell = createReactClass({
   render() {
     const {repoOwner, repoName, number} = this.props.params;
 

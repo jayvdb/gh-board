@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import React from 'react';
+import {Component} from 'react';
 import {Link} from 'react-router';
 import * as BS from 'react-bootstrap';
 import {HomeIcon, StarIcon, GearIcon, QuestionIcon, GraphIcon, TagIcon} from 'react-octicons';
@@ -14,46 +14,46 @@ import LoginModal from '../login-modal';
 import LabelBadge from '../label-badge';
 import MoveModal from '../move-modal';
 import FilterDropdown from './filter-dropdown';
+import EtherpadModal from '../etherpad-modal';
 
 
-const SettingsItem = React.createClass({
-  render() {
-    const {key, onSelect, isChecked, className, to, children} = this.props;
-    let {href} = this.props;
+function SettingsItem(props) {
+  const {key, onSelect, isChecked, className, to, children} = props;
+  let {href} = props;
 
-    if (!href && to) {
-      href = `#${to}`; // Link
-    }
-
-    return (
-      <BS.MenuItem key={key} href={href} onSelect={onSelect} className={className}>
-        <span className='settings-item-checkbox' data-checked={isChecked}>{children}</span></BS.MenuItem>
-    );
+  if (!href && to) {
+    href = `#${to}`; // Link
   }
-});
 
+  return (
+    <BS.MenuItem key={key} href={href} onSelect={onSelect} className={className}>
+      <span className='settings-item-checkbox' data-checked={isChecked}>{children}</span></BS.MenuItem>
+  );
+}
 
-const AppNav = React.createClass({
-  getInitialState() {
-    return {info: null, showModal: false};
-  },
+class AppNav extends Component {
+  state = {info: null, showModal: false};
+
   componentDidMount() {
     SettingsStore.on('change', this.update);
     SettingsStore.on('change:showPullRequestData', this.update);
     SettingsStore.on('change:tableLayout', this.update);
     Client.on('changeToken', this.onChangeToken);
     this.onChangeToken();
-  },
+  }
+
   componentWillUnmount() {
     SettingsStore.off('change', this.update);
     SettingsStore.off('change:showPullRequestData', this.update);
     SettingsStore.off('change:tableLayout', this.update);
     Client.off('changeToken', this.onChangeToken);
-  },
-  update() {
+  }
+
+  update = () => {
     this.setState({});
-  },
-  onChangeToken() {
+  };
+
+  onChangeToken = () => {
     CurrentUserStore.fetchUser()
     .then((info) => {
       // TODO: when anonymous, getting the current user should be an error.
@@ -65,32 +65,37 @@ const AppNav = React.createClass({
     }).catch(() => {
       this.setState({info: null});
     });
-  },
-  onSignOut() {
+  };
+
+  onSignOut = () => {
     Client.setToken(null);
     CurrentUserStore.clear();
-  },
-  starThisProject() {
+  };
+
+  starThisProject = () => {
     Client.getOcto().user.starred('philschatz/gh-board').add().then(() => {
       /*eslint-disable no-alert */
       alert('Thanks for starring!\n I hope you enjoy the other pages more than this simple alert, but thank you for helping me out!');
       /*eslint-enable no-alert */
     });
-  },
-  promptAndResetDatabases() {
+  };
+
+  promptAndResetDatabases = () => {
     if (confirm('Are you sure you want to reset all the local data? It will take some time to repopulate all the data from GitHub and you may need to reload the page')) {
       Database.resetDatabases().then(() => {
         alert('Local cache has been cleared');
       });
     }
-  },
+  };
+
   render() {
     let routeInfo = getFilters().getState();
     let {repoInfos} = routeInfo;
-    const {info, showModal} = this.state;
+    const {info, showModal, showEPModal} = this.state;
 
     // Note: The dashboard page does not have a list of repos
     const close = () => this.setState({ showModal: false});
+    const closeEP = () => this.setState({showEPModal: false});
 
     const brand = (
       <Link to={buildRoute('dashboard')}><HomeIcon/></Link>
@@ -154,7 +159,7 @@ const AppNav = React.createClass({
       } else {
         repoNameItems = _.map(repoInfos, ({repoOwner, repoName}, index) => {
           const currentRepoInfos = [{repoOwner, repoName}];
-          const repoLink = buildRoute('kanban', {currentRepoInfos});
+          const repoLink = buildRoute('kanban', {repoInfos: currentRepoInfos});
           return (
             <span key={repoLink} className='repo-name-wrap'>
               {index !== 0 && '&' || null}{/* Put an & between repo names */}
@@ -272,16 +277,20 @@ const AppNav = React.createClass({
               <SettingsItem key='gantt-chart' to={getFilters().setRouteName('gantt').url()}><GraphIcon/> Gantt Chart</SettingsItem>
               <SettingsItem key='label-editing' to={getFilters().setRouteName('labels').url()}><TagIcon/> Label Editing</SettingsItem>
               <BS.MenuItem key='reset-databases' onClick={this.promptAndResetDatabases}>Reset Local Cache...</BS.MenuItem>
+              <BS.MenuItem key='divider4' divider/>
+              <BS.MenuItem key='collaborative-settings' header>Collaborative Settings</BS.MenuItem>
+              <BS.MenuItem key='server-setting' onClick={() => this.setState({showEPModal: true})}>Etherpad Server Settings...</BS.MenuItem>
+
             </BS.NavDropdown>
             {loginButton}
           </BS.Nav>
         </BS.Navbar>
         <LoginModal show={showModal} container={this} onHide={close}/>
+        <EtherpadModal show={showEPModal} container={this} onHide={closeEP}/>
         <MoveModal container={this}/>
       </div>
     );
   }
-
-});
+}
 
 export default AppNav;

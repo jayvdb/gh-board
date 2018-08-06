@@ -24,18 +24,10 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: [/node_modules/, /octokat\.js/],
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              'react',
-              'env'
-            ],
-            plugins: [
-              'transform-object-rest-spread'
-            ],
-          }
-        },
+        use: [
+          'babel-inline-import-loader',
+          'babel-loader',
+        ]
       },
       {
         test: /\.less$/,
@@ -69,7 +61,8 @@ module.exports = {
   },
   plugins: isBuild ? [
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('production')
+      'process.env.NODE_ENV': JSON.stringify('production'),
+      REPOSITORIES: JSON.stringify(process.env['REPOSITORIES']),
     }),
     new ExtractTextPlugin('app.css'),
     new UglifyJsPlugin()

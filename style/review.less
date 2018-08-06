@@ -1,0 +1,102 @@
+.review {
+  cursor: default;
+  padding: 0;
+  margin-top: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  border-radius: 3px !important;
+  // When remotely updated since you last looked, mark the review as yellow
+  &.is-updated { background-color: #fcfcd9; }
+  .list-group-item-heading {
+    margin-bottom: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 1rem;
+    font-weight: normal; // from h4
+    .x-font-and-emoji(14px); // This is what is set on the <h4>
+    > .review-blurb {
+      .blurb-number-link { color: #337ab7; } // bootstrap link color
+    }
+  }
+  .review-title {
+    display: block;
+    // it's a link
+    color: black;
+    font-weight: normal;
+    text-decoration: none;
+    .x-font-and-emoji(1.5rem);
+    &:hover { text-decoration: none; }
+  }
+  .reaction-btn {
+    float: left;
+    padding: 4px 7px 3px;
+    border-radius: 2px;
+    line-height: 18px;
+  }
+  .review-btn {
+    padding: 4px 7px 3px;
+    border-radius: 2px;
+    line-height: 18px;
+  }
+  .list-group-item-text {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 1rem;
+    font-size: 2rem;
+    .review-footer {
+      display: block;
+      min-height: 3.5rem;
+      padding-top: 1rem;
+      .comment-reactions {
+        display: block;
+        float: left;
+        font-size: 1.6rem;
+        white-space: nowrap;
+        overflow-x: hidden;
+      }
+      .review-time-and-user {
+        display: block;
+        float: right;
+        time.updated-at {
+          font-size: 1.2rem;
+          color: #999;
+          padding-right: 1rem;
+          display: inline-block;
+          white-space: nowrap;
+          vertical-align: middle;
+          max-width: 9rem;
+          overflow-x: hidden;
+          text-overflow: ellipsis;
+        }
+        .avatar-image { cursor: pointer; }
+      }
+    }
+  }
+  /* Elements that can occur anywhere in an issue */
+  /* When a Pull Request is not mergeable then make the background a light gray with slashes */
+  /* Default merge conflict color when no CI status */
+  &.is-pull-request {
+    &.is-merge-conflict:not(.is-updated) { .x-stripes(#fcfcfc; .9); }
+    &.is-merge-conflict.is-updated       { .x-stripes(#fcfcd9; .9); }
+    &.is-merge-conflict.is-pull-request-to-different-branch { .x-stripes(#e9e9fc; .9); }
+  }
+} /* End Issue */
+
+.related-issues {
+  background-color: #e6e6e6;
+  margin-top: 0;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding-left: 1rem;
+  box-shadow: inset 0 2px 7px -5px #333;
+  .related-issue {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding-top: 1px;
+    .colored-icon { opacity: .5; }
+  }
+}

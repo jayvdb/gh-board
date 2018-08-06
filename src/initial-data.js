@@ -6,7 +6,7 @@ export default async () => {
   let cache;
 
   try {
-    data = await fetch('issues.json');
+    data = await fetch('recent-issues.json');
     cache = await data.json();
   } catch (e) {
     return console.error('Fetching initial data failed', e);

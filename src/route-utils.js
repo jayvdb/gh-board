@@ -47,7 +47,7 @@ function addParams(options, key, vals, defaults) {
 
 // Generate a URL based on various filters and whatnot
 // `/r/:repoStr(/m/:milestonesStr)(/t/:tagsStr)(/u/:user)(/x/:columnRegExp)/:name(/:startShas)(/:endShas)
-export function buildRoute(name, {repoInfos, milestoneTitles, tagNames, columnLabels, userName, columnRegExp, routeSegmentName, states, types}={}, ...otherFields) {
+export function buildRoute(name, {repoInfos, milestoneTitles, tagNames, columnLabels, userName, columnRegExp, routeSegmentName, states, types, reviews}={}, ...otherFields) {
   repoInfos = repoInfos || [];
   milestoneTitles = milestoneTitles || [];
   tagNames = tagNames || [];
@@ -67,6 +67,7 @@ export function buildRoute(name, {repoInfos, milestoneTitles, tagNames, columnLa
   addParams(options, 'u', userName);
   addParams(options, 's', states, DEFAULTS.states); // include the defaults so the URL is cleaner
   addParams(options, 't', types, DEFAULTS.types);
+  addParams(options, 'r', reviews, DEFAULTS.reviews);
   if (columnRegExp) {
     const re = columnRegExp.toString();
     // Strip off the wrapping `/` marks
@@ -118,6 +119,7 @@ export function parseRoute({params, routes, location}) {
   let userName;
   let states;
   let types;
+  let reviews;
   let columnRegExp;
 
   // TODO: remove these fallbacks once URL's are updated.
@@ -130,9 +132,10 @@ export function parseRoute({params, routes, location}) {
   if (query.u) { userName = query.u; }
   if (query.s) { states = parseArray(query.s); }
   if (query.t) { types = parseArray(query.t); }
+  if (query.r) { reviews = parseArray(query.r); }
   if (query.x) { columnRegExp = new RegExp(query.x); }
 
-  return {repoInfos, milestoneTitles, tagNames, columnLabels, userName, states, types, columnRegExp, routeSegmentName};
+  return {repoInfos, milestoneTitles, tagNames, columnLabels, userName, states, types, reviews, columnRegExp, routeSegmentName};
 }
 
 class FilterState {
@@ -190,6 +193,9 @@ class FilterState {
   toggleType(type) {
     return this._toggleKey('types', type);
   }
+  toggleReviews(reviews) {
+    return this._toggleKey('reviews', reviews);
+  }
   // setUser(user)
   // clearUser()
   toggleUserName(name) {
@@ -220,6 +226,7 @@ const DEFAULTS = {
   tagNames: [],
   states: ['open'],
   types: ['issue', 'pull-request'],
+  reviews: ['my-reviews', 'reviews-under-my-pr', 'my-meta-reviews', 'others'],
   columnLabels: [],
   columnRegExp: undefined
 };
@@ -348,5 +355,53 @@ export function filterCardsByFilter(cards, filter) {
     if (_.difference(_.without(includedTagNames, UNCATEGORIZED_NAME), labelNames).length > 0) { return false; }
     if (_.intersection(excludedTagNames, labelNames).length > 0) { return false; }
     return true;
+  });
+}
+
+// Filters the list of reviews by the criteria set in the URL.
+// Note this happens after `issues/prs` get filtered. A review is
+// just a part of a pull request, so this would only take effect
+// if its corresponding issue is not filtered out.
+// Used by FilterStore.filterAndSortReviews()
+export function filterReviewsByFilter(reviews, filter, user) {
+  filter = filter || getFilters();
+  const {reviews: reviewOptions} = filter.getState();
+
+  let myReviews, reviewsUnderMyPr, myMetaReviews, others;
+  for (const reviewOption of reviewOptions) {
+    switch (reviewOption) {
+    case 'my-reviews':
+      myReviews = true;
+      break;
+    case 'reviews-under-my-pr':
+      reviewsUnderMyPr = true;
+      break;
+    case 'my-meta-reviews':
+      myMetaReviews = true;
+      break;
+    case 'others':
+      others = true;
+      break;
+    default:
+      throw new Error('Review filter is invalid!');
+    }
+  }
+
+  return reviews.filter(review => {
+    const isMyReview = review.author && review.author.login && review.author.login === user;
+    const isReviewUnderMyPr = review.prAuthor === user;
+    const hasMyMetaReview = review.reactions && review.reactions.some(reaction => {
+      return reaction.user && reaction.user.login && reaction.user.login === user;
+    });
+
+    // This is main filter that is needed. It should be default not to show the
+    // user their own comments, unless they explicitly request it.
+    if (!myReviews && isMyReview) return false;
+
+    if (myReviews && isMyReview) return true;
+    if (reviewsUnderMyPr && isReviewUnderMyPr) return true;
+    if (myMetaReviews && hasMyMetaReview) return true;
+    if (others && !isMyReview && !isReviewUnderMyPr && !hasMyMetaReview) return true;
+    return false;
   });
 }

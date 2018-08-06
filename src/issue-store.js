@@ -187,7 +187,7 @@ const issueStore = new class IssueStore extends EventEmitter {
       });
     });
   }
-  _fetchLastSeenUpdatesForRepo(repoOwner, repoName, progress, lastSeenAt, isPrivate, didLabelsChange) {
+  async _fetchLastSeenUpdatesForRepo(repoOwner, repoName, progress, lastSeenAt, isPrivate, didLabelsChange) {
     const opts = {
       per_page: 100,
       sort: 'updated',
@@ -199,7 +199,28 @@ const issueStore = new class IssueStore extends EventEmitter {
     }
     let fetchPromise;
     if (Client.canCacheLots()) {
-      fetchPromise = Client.getOcto().repos(repoOwner, repoName).issues.fetchAll(opts);
+      if (Client.useGraphQL()) {
+        const [issues, pullRequests] = await Promise.all([
+          Client.getGraphQLClient()
+            .repo(repoOwner, repoName)
+            .issues({sort: 'UPDATED_AT', earliestDate: lastSeenAt})
+            .fetchAll({per_page: 100}),
+          Client.getGraphQLClient()
+            .repo(repoOwner, repoName)
+            .pullRequests({sort: 'UPDATED_AT', earliestDate: lastSeenAt})
+            .fetchAll({per_page: 30})
+        ]);
+        let result = [];
+        if (issues) {
+          result = result.concat(issues);
+        }
+        if (pullRequests) {
+          result = result.concat(pullRequests);
+        }
+        fetchPromise = Promise.resolve(result.map((item) => item.issue));
+      } else {
+        fetchPromise = Client.getOcto().repos(repoOwner, repoName).issues.fetchAll(opts);
+      }
     } else {
       fetchPromise = Client.getOcto().repos(repoOwner, repoName).issues.fetchOne(opts);
     }

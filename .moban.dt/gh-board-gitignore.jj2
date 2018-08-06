@@ -1,0 +1,11 @@
+{% extends 'gitignore.jj2' %}
+{% block extra %}
+/selenium-screenshot.png
+
+{# copied from coala-gitignore.jj2 #}
+# Patch & backup files
+*.patch
+*.orig
+*.diff
+
+{% endblock %}

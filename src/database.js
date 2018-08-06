@@ -187,7 +187,7 @@ const database = new class Database {
       const cards = [];
       let query;
       if (states.length === 1) {
-        query = db.issues.where('state').equals('open');
+        query = db.issues.where('state').equals(states[0]);
       } else if (states.length === 2 /* [open, closed] */) {
         query = db.issues;
       }
